@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
-import MapView from 'react-native-maps';
+import {Platform, StyleSheet, Text, View, Image} from 'react-native';
+import { connect } from 'react-redux';
+import MapView, { Marker } from 'react-native-maps';
 
-export default class MapPoints extends Component<Props> {
+class MapPoints extends Component<Props> {
   constructor(props) {
     super(props);
     const {region} = this.getInitialState()
@@ -25,14 +26,37 @@ onRegionChange(region) {
 }
 
 render() {
+  const pokemons = this.props.pokemon.data
   return (
-    <MapView
-      region={this.state.region}
-      onRegionChange={this.onRegionChange}
-    />
+    <View>
+      <MapView style={{width: '100%', height: '110%'}}
+        initialRegion={{
+          latitude: -6.3019001,
+          longitude: 106.7328594,
+          latitudeDelta: 0.00922,
+          longitudeDelta: 0.00421,
+        }}
+      >
+      {pokemons.map((item, index) => (
+        <Marker onPress={()=> this.props.navigation.navigate('detail', {pushData : item})} key={index} coordinate={{latitude : Number(item.latitude), longitude : Number(item.longitude) }}>
+          <Image source={{uri : item.image_url}} style={{width: 80, height: 50}}/>
+        </Marker>
+      ))}
+      
+      </MapView>
+    </View>
   );
 }
 }
+
+
+const mapStateToProps = (state) => {
+  return {
+    pokemon: state.pokemon  
+  }
+}
+
+export default connect(mapStateToProps)(MapPoints)
 
 const styles = StyleSheet.create({
   container: {

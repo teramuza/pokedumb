@@ -17,6 +17,8 @@ import Register from './src/screens/auth/Register';
 import Home from './src/screens/tabNavigate/Home';
 import InputPoke from './src/screens/InputPoke';
 import MapPoints from './src/screens/tabNavigate/MapPoints';
+import PokeDetail from './src/screens/Detail';
+import UpdatePoke from './src/screens/UpdatePoke';
 // import Favorite from './src/screens/contents/Favorite';
 // import ListofPlaylist from './src/screens/contents/ListofPlaylist'
 // import Queue from './src/screens/contents/Queue';
@@ -45,15 +47,6 @@ const AppSplash = createStackNavigator({
     }
 })
 
-const AppAuth = createStackNavigator({
-    login : {
-        screen : Login,
-    },
-    register : {
-        screen : Register,
-    }
-})
-
 const AppTabNavigator = createBottomTabNavigator({
     home : {
         screen : Home,
@@ -63,6 +56,9 @@ const AppTabNavigator = createBottomTabNavigator({
     },
     mapPoints : {
       screen : MapPoints,
+      navigationOptions :{
+        title : 'Temukan'
+      }
     },
     settings : {
         screen : Setting,
@@ -85,6 +81,10 @@ const AppTabNavigator = createBottomTabNavigator({
         else if (routeName === 'settings') {
             iconType = `MaterialCommunityIcons`;
             iconName = `settings${focused ? '' : '-outline'}`;
+        }
+        else if (routeName === 'mapPoints') {
+            iconType = `MaterialCommunityIcons`;
+            iconName = `compass${focused ? '' : '-outline'}`;
         }
 
         // You can return any component that you like here!
@@ -111,6 +111,18 @@ const AppContents = createStackNavigator({
 
     inputPoke : {
       screen : InputPoke,
+    },
+    detail : {
+        screen : PokeDetail,
+    },
+    update : {
+        screen : UpdatePoke
+    },
+    login : {
+        screen : Login,
+    },
+    register : {
+        screen : Register,
     }
 
     // player : {
@@ -132,7 +144,6 @@ const AppContents = createStackNavigator({
 const AppNavigator = createSwitchNavigator({
     splashScreen : AppSplash,
     contents : AppContents,
-    auth : AppAuth,
 })
 
 const AppRoot = createAppContainer(AppNavigator);

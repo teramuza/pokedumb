@@ -4,6 +4,7 @@ import { Container, Header, Content, Form, Item, Input, Label, Thumbnail, View, 
 import { connect } from 'react-redux';
 
 import { putToken } from '../publics/redux/actions/auth'
+import { getPokemons } from '../publics/redux/actions/pokemon';
 // import { getSongs } from '../publics/redux/actions/songs'
 // import { getProfile } from '../publics/redux/actions/user'
 // import { getLists } from '../publics/redux/actions/playlist'
@@ -18,7 +19,11 @@ class Splash extends Component {
 	async fetchData(){
 		try {
 			const token = await AsyncStorage.getItem('token')
-			await this.props.dispatch(putToken(token))
+			const refToken = await AsyncStorage.getItem('refToken')
+			const email = await AsyncStorage.getItem('email')
+
+			await this.props.dispatch(putToken(token, refToken, email))
+			await this.props.dispatch(getPokemons());
 			// await this.props.dispatch(getProfile())
 			// await this.props.dispatch(getLists())
 

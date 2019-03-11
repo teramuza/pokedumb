@@ -2,40 +2,63 @@
 
 const Database = use('Database')
 const Pokemon = use('App/Models/Pokemon')
+const PokemonType = use('App/Models/PokemonType')
 
 class PokemonController {
 
-	async index(){
-		const pokemons = await Database
-		.select('pokemons.id', 'pokemons.category_id', 'pokemons.name', 'pokemons.image_url', 'pokemons.latitude', 'pokemons.longitude','categories.name AS category')
-		.from('pokemons')
-		// .innerJoin('pokemon_types', 'pokemons.id', 'pokemon_types.pokemon_id')
-		// .innerJoin('types', 'pokemon_types.type_id', 'types.id')
-		.innerJoin('categories', 'pokemons.category_id', 'categories.id')
+	async index({request, response}){
 
-		// .select('pokemons.id', 'pokemons.category_id' 'pokemons.name', 'pokemons.image_url', 'pokemons.latidude', 'pokemons.longitude','categories.name')
-		// 
+		let pokemons = await Pokemon
+		.query()
+		.with('categories')
+		.with('types')
+		.fetch()
+
 		return pokemons
-	}
 
+	}
+	
 	async byId({params}){
 		const {id} = params
-		const pokemon = await Database
-		.raw(`SELECT pokemons.id, pokemons.name, pokemons.image_url, pokemons.latitude, pokemons.longitude, categories.name AS category, GROUP_CONCAT(types.name) as types FROM pokemon_types JOIN pokemons on pokemon_types.pokemon_id = pokemons.id JOIN types on pokemon_types.type_id = types.id JOIN categories on pokemons.category_id = categories.id WHERE pokemons.id=${id}`)
+		let pokemon = await Pokemon
+		.query()
+		.with('categories')
+		.with('types')
+		.where('id', id)
+		.fetch()
+
 		return pokemon
 	}
 
 	async input({request}){
-      await Pokemon.create(request.all())
+		const {name, image_url, category_id, type_ids, latitude, longitude} = request.post()
+		const pokeAdd = {category_id, name, image_url, latitude, longitude}
+     	await Pokemon.create(pokeAdd)
+
+     	const poke = await Pokemon.findBy('name', name)
+     	await poke.types().attach(type_ids)
+
+     	return request.post()
 
 	}
 
 	async update({params, request}){
 		const {id} = params
-		await Pokemon
-		.query()
-		.where('id', id)
-		.update(request.all())
+		const {name, image_url, category_id, type_ids, latitude, longitude} = request.all()
+		const pokeUp = {category_id, name, image_url, latitude, longitude}
+		
+		const poke = await Pokemon.find(id)
+		await Pokemon.query().where('id', id).update(pokeUp)
+		await poke.types().detach()
+		await poke.types().attach(type_ids)
+	}
+
+	async delete({params}){
+		const {id} = params
+
+		const poke = await Pokemon.find(id)
+		await poke.types().detach()
+		await poke.delete()
 	}
 }
 

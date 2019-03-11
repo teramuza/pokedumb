@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/home/ajaa/Project/react/test0203-pokedump/app/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-large-v4/values-large-v4.xml",
+            "outputFile": "/home/ajaa/Project/react/testakhir/app/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-large-v4/values-large-v4.xml",
             "map": [
                 {
                     "source": "/home/ajaa/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/1124a4799ed86331dd609d0458c6a081/res/values-large-v4/values-large-v4.xml",

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ScrollView, Platform, StyleSheet, FlatList, Image, TouchableWithoutFeedback, Dimensions, StatusBar, AsyncStorage, Alert } from 'react-native';
+import { ScrollView, Platform, StyleSheet, FlatList, Image, TouchableWithoutFeedback, Dimensions, StatusBar, AsyncStorage, Alert, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import { Container, Content, Left, Body, Right, Card,View, CardItem, Text, Fab, Icon, Badge, Header,Button, Title, Item, Input, List, ListItem, Thumbnail } from 'native-base';
 
@@ -11,87 +11,80 @@ class Setting extends Component<Props> {
   static navigationOptions = ({ navigation }) => ({
     header: null,
   })
-  constructor(props) {
-    super(props);
   
-    this.state = {
-        email : '',
-        token : '',
-        refToken : ''
-    };
-  }
-
-  async getToken(){
-    const refToken = await AsyncStorage.getItem('refToken')
-    const token = await AsyncStorage.getItem('token')
-
-    this.setState({token, refToken})
-  }
-
-  async componentDidMount(){
-    const email = await AsyncStorage.getItem('email')
-    this.setState({email})
-  }
   
   render() {
-    
+    const auth = this.props.auth.data
     return (
       <Container>
       <StatusBar hidden={false}/>
 
-        <Header searchBar rounded style={{backgroundColor: '#303030'}} androidStatusBarColor='#212121'>
+        <Header searchBar rounded style={{backgroundColor: '#F5F5F5'}} androidStatusBarColor='#303030'>
             <View style={{paddingTop: 17}}>
-                <Text style={{color: '#f0f0f0', fontSize: 18, fontWeight:'600'}}>Pengaturan</Text>
+                <Text style={{color: '#303030', fontSize: 18, fontWeight:'600'}}>Pengaturan</Text>
             </View>
         </Header>
-        <Content style={{backgroundColor: '#212121'}}>
+        <Content style={{backgroundColor: '#EEEEEE'}}>
             <List style={{paddingTop: 20}}>
 
-              {(this.state.token != '') &&
+              {(auth.token != null) &&
               	<ListItem noBorder style={{paddingVertical: 5}}>
                   <View style={{}}>
-                    <Text style={{fontSize: 14, color: '#f0f0f0'}}>Akun</Text>
-                    <Text style={{fontSize: 13, color: '#969696'}}>{this.state.email}</Text>
+                    <Text style={{fontSize: 14, color: '#424242'}}>Akun</Text>
+                    <Text style={{fontSize: 13, color: '#757575'}}>{auth.email}</Text>
                   </View>
               </ListItem>
               }
+              {(auth.token === null) &&
+              <ListItem noBorder style={{paddingVertical: 5}} onPress={() => this.checkLoginStatus('home')}>
+                  <View>
+                      <Text style={{fontSize: 14, color: '#424242'}}>Akun</Text>
+                      <Text style={{fontSize: 13, color: '#757575'}}>Anda belum login, ketuk untuk login</Text>
+                  </View>
+              </ListItem>
+              }
+              <ListItem noBorder style={{paddingVertical: 5}} onPress={() => Linking.openURL('mailto:dev@teramuza.xyz?subject=Laporkan Masalah PokeDumb') }>
+                  <View>
+                      <Text style={{fontSize: 14, color: '#424242'}}>Laporkan Masalah</Text>
+                      <Text style={{fontSize: 13, color: '#757575'}}>dev@pokedumb.teramuza.xyz</Text>
+                  </View>
+              </ListItem>
               <ListItem noBorder style={{paddingVertical: 5}}>
                   <View>
-                      <Text style={{fontSize: 14, color: '#f0f0f0'}}>Tentang</Text>
-                      <Text style={{fontSize: 13, color: '#969696'}}>Versi P O K E DUMB 0.0.1-5_dev</Text>
+                      <Text style={{fontSize: 14, color: '#424242'}}>Tentang</Text>
+                      <Text style={{fontSize: 13, color: '#757575'}}>Versi P O K E DUMB 0.0.1-5_dev</Text>
                   </View>
-                  
               </ListItem>
-              <View style={{borderBottomWidth: 1, borderBottomColor: '#303030', margin: 15}}/>
+              <View style={{borderBottomWidth: 1, borderBottomColor: '#E0E0E0', margin: 15}}/>
               <ListItem noBorder style={{paddingVertical: 10}}>
                     <View style={{flexDirection: 'row'}} >
-                      <Icon name="thumbs-up" style={{color: '#c0c0c0'}}/>
-                      <Text style={{fontSize: 14, color: '#c0c0c0', paddingTop: 7, paddingLeft: 12}}>Beri Masukan</Text>
+                      <Icon name="thumbs-up" style={{color: '#616161'}}/>
+                      <Text style={{fontSize: 14, color: '#616161', paddingTop: 7, paddingLeft: 12}}>Beri Masukan</Text>
                     </View>
               </ListItem>
               <ListItem noBorder style={{paddingVertical: 10}}>
                     <View style={{flexDirection: 'row'}} >
-                      <Icon name="people" style={{color: '#c0c0c0'}}/>
-                      <Text style={{fontSize: 14, color: '#c0c0c0', paddingTop: 7, paddingLeft: 12}}>Bergabung Dengan Komunitas</Text>
+                      <Icon name="people" style={{color: '#616161'}}/>
+                      <Text style={{fontSize: 14, color: '#616161', paddingTop: 7, paddingLeft: 12}}>Bergabung Dengan Komunitas</Text>
                     </View>
               </ListItem>
               <ListItem noBorder style={{paddingVertical: 10}}>
                     <View style={{flexDirection: 'row'}} >
-                      <Icon name="appstore" style={{color: '#c0c0c0'}}/>
-                      <Text style={{fontSize: 14, color: '#c0c0c0', paddingTop: 7, paddingLeft: 12}}>Ulas Kami di PlayStore</Text>
+                      <Icon name="appstore" style={{color: '#616161'}}/>
+                      <Text style={{fontSize: 14, color: '#616161', paddingTop: 7, paddingLeft: 12}}>Ulas Kami di PlayStore</Text>
                     </View>
               </ListItem>
-              <ListItem noBorder style={{paddingVertical: 10}}>
+              <ListItem noBorder style={{paddingVertical: 10}} onPress={() => Linking.openURL('http://teramuza.xyz') } >
                     <View style={{flexDirection: 'row'}} >
-                      <Icon name="globe" style={{color: '#c0c0c0'}}/>
-                      <Text style={{fontSize: 14, color: '#c0c0c0', paddingTop: 7, paddingLeft: 12}}>Buka pokedumb.teramuza.xyz</Text>
+                      <Icon name="globe" style={{color: '#616161'}}/>
+                      <Text style={{fontSize: 14, color: '#616161', paddingTop: 7, paddingLeft: 12}}>Buka pokedumb.teramuza.xyz</Text>
                     </View>
               </ListItem>
-              {(this.state.token != '') &&
+              {(auth.token != null) &&
               <ListItem noBorder style={{paddingVertical: 10}} onPress={()=> this.confirmLogout()}>
                     <View style={{flexDirection: 'row'}} >
-                      <Icon name="power" style={{color: '#c0c0c0'}}/>
-                      <Text style={{fontSize: 14, color: '#c0c0c0', paddingTop: 7, paddingLeft: 12}}>Keluar</Text>
+                      <Icon name="power" style={{color: '#616161'}}/>
+                      <Text style={{fontSize: 14, color: '#616161', paddingTop: 7, paddingLeft: 12}}>Keluar</Text>
                     </View>
               </ListItem>
           }
@@ -99,6 +92,18 @@ class Setting extends Component<Props> {
         </Content>
       </Container>
     );
+  }
+
+  async checkLoginStatus(path){
+      try { 
+        const token = this.auth.data.token
+        await this.props.dispatch(checkLogin(token))
+        this.props.navigation.navigate(path)
+      }
+      catch(e){
+        this.props.navigation.navigate('login', {path})
+      }
+
   }
 
   confirmLogout(){
@@ -114,7 +119,7 @@ class Setting extends Component<Props> {
                     await AsyncStorage.removeItem('refToken')
                     await AsyncStorage.clear()
                     try {
-                    await this.props.dispatch(logout(this.state.token, this.state.refToken))
+                    await this.props.dispatch(logout(this.auth.data.token, this.auth.data.refToken))
                 	}catch(e){
                 		console.log(e)
                 	}
@@ -127,6 +132,10 @@ class Setting extends Component<Props> {
 
 
 }
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth
+  }
+}
 
-
-export default connect()(Setting)
+export default connect(mapStateToProps)(Setting)

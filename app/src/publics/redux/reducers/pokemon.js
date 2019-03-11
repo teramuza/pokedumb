@@ -1,7 +1,8 @@
 const initialValue = {
 	data : [],
 	categories : [],
-	item : [],
+	item : {},
+	types : [],
 	isLoading : false,
 	isError: false
 }
@@ -38,7 +39,7 @@ export default (state = initialValue, action) => {
 	    	return{
 	    		...state,
 	    		isLoading : false,
-	    		data : action.payload.data,
+	    		item : action.payload.data,
 	    	}
 
 	    case 'GET_POKEMON_REJECTED':
@@ -58,7 +59,7 @@ export default (state = initialValue, action) => {
 	    	return{
 	    		...state,
 	    		isLoading : false,
-	    		data : action.payload.data,
+	    		categories : action.payload.data,
 	    	}
 
 	    case 'GET_CATEGORIES_REJECTED':
@@ -67,20 +68,20 @@ export default (state = initialValue, action) => {
 	    		isLoading : false,
 	    		isError : true,
 	    	}
-	    case 'GET_POKEMON_PENDING':
+	    case 'GET_TYPES_PENDING':
 	    	return{
 	    		...state,
 	    		isLoading : true
 	    	}
 
-	    case 'GET_POKEMON_FULFILLED':
+	    case 'GET_TYPES_FULFILLED':
 	    	return{
 	    		...state,
 	    		isLoading : false,
-	    		data : action.payload.data,
+	    		types : action.payload.data,
 	    	}
 
-	    case 'GET_POKEMON_REJECTED':
+	    case 'GET_TYPES_REJECTED':
 	    	return{
 	    		...state,
 	    		isLoading : false,

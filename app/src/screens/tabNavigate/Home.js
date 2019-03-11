@@ -2,6 +2,10 @@ import React, { Component } from 'react'
 import { Image, View, TouchableNativeFeedback, FlatList, StatusBar, AsyncStorage } from 'react-native'
 import { Container, Header, Title, Content, List, ListItem, Thumbnail, Text, Left, Body, Right, Icon, Button, Fab, Badge, Input } from 'native-base'
 import { connect } from 'react-redux';
+import { createFilter } from 'react-native-search-filter';
+
+const KEYS_TO_FILTERS = ['name','categories.name','types.name'];
+
 
 import { getPokemons } from '../../publics/redux/actions/pokemon';
 import { checkLogin } from '../../publics/redux/actions/auth';
@@ -10,32 +14,36 @@ import { checkLogin } from '../../publics/redux/actions/auth';
 class Home extends Component {
 
 	static navigationOptions = ({ navigation }) => ({
-		header: (
-			<Header searchBar rounded style={{backgroundColor: '#303030'}} androidStatusBarColor='#212121'>        
-                <View style={{paddingTop: 17}}>
-                	<Text style={{color: '#f0f0f0', fontSize: 18, fontWeight:'600'}}>Beranda</Text>
-                </View>
-            </Header>
-		)
+		header: null,
 	})
-    componentDidMount() {
-		this.getData();
-	}
 
-	getData = () => {
-		this.props.dispatch(getPokemons());
-	}
+   constructor(props) {
+    super(props);
+  
+    this.state = {
+      searchTerm: ''
+    };
+  }
+
+  searchUpdated(term) {
+    this.setState({ searchTerm: term })
+  }
 
 	renderItem = ({ item, index }) => (
-
-    <ListItem noBorder key={index} thumbnail onPress={()=> this.props.navigation.navigate('listofPlaylist', {pushData : item})}>
+    <ListItem noBorder key={index} thumbnail 
+      onPress={()=> this.props.navigation.navigate('detail', {pushData : item})} 
+    >
             <Left>
                 <Image source={{uri : item.image_url }} style={{width:100,  height: 100}}/>
             </Left>
             <Body>
-                <Text style={{fontSize: 14, color: '#f0f0f0'}}>{item.name}</Text>
-                <Text style={{fontSize: 13, color: '#969696'}}>{item.category}</Text>
-
+                <Text style={{fontSize: 14, color: '#1b1b1b'}}>{item.name}</Text>
+                <Text style={{fontSize: 13, color: '#969696'}}>{item.categories.name}</Text>
+                <View style={{flexDirection: 'row', paddingTop: 5}}>
+                {item.types.map((type, index) =>(
+                  <Text style={{fontSize: 12, color: '#969696', borderWidth: 0.3, borderColor: '#969696', borderRadius: 20, paddingHorizontal: 5, paddingVertical: 2}} key={index}>{`${type.name}`}</Text>
+                ))}
+                </View>
             </Body>
             <Right>
             </Right>
@@ -45,21 +53,23 @@ class Home extends Component {
   _keyExtractor = (item, index) => index.toString();
 
   render() {
+    const filteredPoke = this.props.pokemon.data.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS))
+
     return (
       <Container>
-      <StatusBar hidden={false}/>
+      <StatusBar hidden={false} barStyle="light-contents"/>
 
-        <Header searchBar rounded style={{backgroundColor: '#303030'}} androidStatusBarColor='#212121'>        
+        <Header searchBar rounded style={{backgroundColor: '#F5F5F5'}} androidStatusBarColor='#303030'>        
             <Icon name="search" style={{color: '#969696', marginTop: 14, marginLeft: 12}}/>
-            <Input placeholder="Cari Pokemon mu" placeholderTextColor="#969696" style={{marginTop: 2, paddingLeft: 10, color: '#f0f0f0'}}/>
+            <Input placeholder="Cari Pokemon mu" placeholderTextColor="#969696" style={{marginTop: 2, paddingLeft: 10, color: '#303030'}} onChangeText={(term) => { this.searchUpdated(term) }}/>
         </Header>
-        <Content style={{backgroundColor: '#212121'}}>
+        <Content style={{backgroundColor: '#EEEEEE'}}>
               <View style={{paddingTop: 20, paddingLeft: 15}}>
-                <Text style={{fontSize: 17, fontWeight: '500', paddingBottom: 10, color: '#f0f0f0'}}>Generasi I</Text>
+                <Text style={{fontSize: 17, fontWeight: '500', paddingBottom: 10, color: '#424242'}}>Daftar Pokemon</Text>
             </View>
             <List>
               <FlatList
-                data={this.props.pokemon.data}
+                data={(this.state.searchTerm) ? filteredPoke : this.props.pokemon.data}
                 keyExtractor={this._keyExtractor}
                 renderItem={this.renderItem}
               />
@@ -67,7 +77,7 @@ class Home extends Component {
         </Content>
         <Fab
             containerStyle={{ }}
-            style={{ backgroundColor: '#5067FF' }}
+            style={{ backgroundColor: '#303030' }}
             position="bottomRight"
             onPress={() => this.checkLoginStatus('inputPoke')}>
             <Icon name="add" />
@@ -80,11 +90,9 @@ class Home extends Component {
 	  	try { 
 	  		const token = await AsyncStorage.getItem('token')
 	  		await this.props.dispatch(checkLogin(token))
-	  		console.warn('WOI');
 	  		this.props.navigation.navigate(path)
 	  	}
 	  	catch(e){
-	  		console.warn(e);
 	  		this.props.navigation.navigate('login', {path})
 	  	}
 

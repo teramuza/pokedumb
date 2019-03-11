@@ -3,9 +3,7 @@ import { Alert, AsyncStorage, StatusBar, Image, BackHandler } from 'react-native
 import { Container, Header, Content, Form, Item, Input, Label, Thumbnail, View, Left, Right, Button, Icon, Text } from 'native-base';
 import { connect } from 'react-redux';
 
-import { login } from '../../publics/redux/actions/auth'
-// import { getSongs } from '../../publics/redux/actions/songs'
-// import { getLists } from '../../publics/redux/actions/playlist'
+import { login } from '../../publics/redux/actions/auth';
 
 
 class Login extends Component {
@@ -74,18 +72,18 @@ class Login extends Component {
 							<View style={{borderBottomWidth: 1, borderBottomColor: '#707070'}}/>
 							<Text style={{position: 'absolute', zIndex: 1, top: 28, left: 138, backgroundColor: '#282828', color: '#969696', paddingHorizontal: 8, fontSize: 15 }}>Masuk dengan</Text>
 						</View>
-						{/*<View style={{flexDirection: 'row', paddingTop: 30, paddingHorizontal: 30, flex: 1}} >
+						<View style={{flexDirection: 'row', paddingTop: 30, paddingHorizontal: 30, flex: 1}} >
 							<View style={{flex : 3, paddingHorizontal: 30}}>
-								<Thumbnail style={{width: 40, height: 40}} avatar source={require('../images/fb.png')}/>
+								<Thumbnail style={{width: 40, height: 40}} avatar source={require('../../assets/img/fb.png')}/>
 							</View>
 							<View style={{flex : 3, paddingHorizontal: 30}}>
-								<Thumbnail style={{width: 40, height: 40}}  avatar source={require('../images/google.png')}/>
+								<Thumbnail style={{width: 40, height: 40}}  avatar source={require('../../assets/img/google.png')}/>
 							</View>
 							<View style={{flex : 3, paddingHorizontal: 30}}>
-								<Thumbnail style={{width: 40, height: 40}}  avatar source={require('../images/line.png')}/>
+								<Thumbnail style={{width: 40, height: 40}}  avatar source={require('../../assets/img/line.png')}/>
 							</View>
 
-						</View>*/}
+						</View>
 			        </View>
 				</Content>
 			</Container>

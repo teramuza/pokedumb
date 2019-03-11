@@ -7,11 +7,11 @@ class PokemonsSchema extends Schema {
   up () {
     this.create('pokemons', (table) => {
       table.increments()
-      table.integer('category_id').unsigned().references('id').inTable('categories')
+      table.integer('category_id').unsigned().references('id').inTable('categories').onDelete('cascade').onUpdate('cascade')
       table.string('name').notNullable()
-      table.string('image_url')
-      table.string('latitude')
-      table.string('longitude')
+      table.string('image_url').notNullable()
+      table.string('latitude').notNullable()
+      table.string('longitude').notNullable()
       table.timestamps()
     })
   }

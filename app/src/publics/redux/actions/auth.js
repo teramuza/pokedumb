@@ -28,10 +28,10 @@ export const register = (body) => {
 	}
 }
 
-export const putToken = (token) => {
+export const putToken = (token, refToken, email) => {
 	return{
 		type : 'PUT_TOKEN',
-		payload : token
+		payload : {token, refToken, email}
 	}
 }
 

@@ -1,5 +1,9 @@
 const initialValue = {
-	data : {},
+	data : {
+		email : null,
+		token : null,
+		refToken : null,
+	},
 	isLoading : false,
 	isError: false
 }
@@ -71,7 +75,8 @@ export default (state = initialValue, action) => {
 	    		...state,
 	    		isLoading : false,
 	    		data : {
-	    			token : action.payload
+	    			token : action.payload.token,
+	    			refToken : action.payload.refToken
 	    		}
 	    	}
 
